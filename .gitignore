@@ -25,23 +25,4 @@ target/
 ### VS Code ###
 .vscode/
 
-# Angular
-/dist
-/tmp
-/out-tsc
-/bazel-out
-/node_modules
-npm-debug.log
-yarn-error.log
 
-### Angular IDE specific files ###
-.project
-.classpath
-.c9/
-*.launch
-.settings/
-*.sublime-workspace
-
-# System Files
-.DS_Store
-Thumbs.db
