@@ -25,4 +25,13 @@ target/
 ### VS Code ###
 .vscode/
 
+<<<<<<< HEAD
+=======
+
+# Ignore Docker-related files
+*.log
+.docker/
+docker-compose.yml
+.env
+>>>>>>> eddf94b (Mise en route du backend)
 
