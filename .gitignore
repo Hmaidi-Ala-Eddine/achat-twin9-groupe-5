@@ -83,4 +83,4 @@ build/
 *.log
 .docker/
 docker-compose.yml
-.env
+
