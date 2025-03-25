@@ -78,3 +78,10 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Ignore Docker-related files
+*.log
+.docker/
+docker-compose.yml
+.env
+
