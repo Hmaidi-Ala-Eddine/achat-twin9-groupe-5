@@ -1,26 +1,18 @@
-# Use an official Node.js runtime as a parent image
-FROM node:18-alpine
+# Step 1: Use NGINX to serve the pre-built Angular app
+FROM nginx:alpine
 
-# Set the working directory in the container
-WORKDIR /app
+# Copy the pre-built Angular app from the local dist folder to NGINX's default folder
+COPY ./dist/achat-frontend /usr/share/nginx/html
 
-# Copy the package.json and package-lock.json
-COPY package*.json ./
+# Expose port 80 (default HTTP port for NGINX)
+EXPOSE 80
 
-# Install dependencies with --legacy-peer-deps to prevent conflicts
-RUN npm install --legacy-peer-deps
+# Run NGINX in the foreground
+CMD ["nginx", "-g", "daemon off;"]
 
-# Copy the rest of the application code
-COPY . .
 
-# Build the Angular project (fixing the build flag)
-RUN npm run build --configuration=production
 
-# Install http-server globally to serve the app
-RUN npm install -g http-server
 
-# Expose port 8080 for the app to be accessible
-EXPOSE 8080
 
-# Command to run the server
-CMD ["http-server", "dist/achat-frontend", "-p", "8080"]
+
+
