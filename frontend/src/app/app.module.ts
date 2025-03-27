@@ -14,6 +14,7 @@ import { SecteurActiviteComponent } from './secteur-activite/secteur-activite.co
 import { OperateurComponent } from './operateur/operateur.component';
 import { FactureComponent } from './facture/facture.component';
 import { NavbarComponent } from './navbar/navbar.component';
+import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,11 @@ import { NavbarComponent } from './navbar/navbar.component';
     FormsModule,
     NgbModalModule,
     RouterModule,
-    NgbModule
+    NgbModule,
+    LoggerModule.forRoot({
+      level: NgxLoggerLevel.DEBUG,
+      serverLogLevel: NgxLoggerLevel.ERROR
+    })
   ],
   providers: [],
   bootstrap: [AppComponent]

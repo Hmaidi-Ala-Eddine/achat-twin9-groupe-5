@@ -22,6 +22,7 @@
     "@ng-bootstrap/ng-bootstrap": "^12.0.2",
     "@popperjs/core": "^2.10.2",
     "bootstrap": "^5.2.0",
+    "ngx-logger": "^5.0.12",
     "rxjs": "~6.6.0",
     "zone.js": "~0.11.4"
   },
