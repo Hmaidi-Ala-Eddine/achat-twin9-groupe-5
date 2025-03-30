@@ -13,81 +13,127 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import tn.esprit.rh.achat.entities.Produit;
-import tn.esprit.rh.achat.repositories.ProduitRepository;
+import tn.esprit.rh.achat.entities.Stock;
+import tn.esprit.rh.achat.repositories.StockRepository;
 
 @ExtendWith(MockitoExtension.class)
-class ProduitServiceImplTest {
+class StockServiceImplTest {
 
     @Mock
-    private ProduitRepository produitRepository;
+    private StockRepository stockRepository;
 
     @InjectMocks
-    private ProduitServiceImpl produitService;
+    private StockServiceImpl stockService;
 
-    private Produit produit1, produit2;
+    private Stock stock1;
+    private Stock stock2;
+    private List<Stock> stockList;
 
     @BeforeEach
     void setUp() {
-        produit1 = new Produit();
-        produit1.setIdProduit(1L);
-        produit1.setLibelleProduit("Produit A");
+        // Premier stock
+        stock1 = new Stock();
+        stock1.setIdStock(1L);
+        stock1.setLibelleStock("Stock 1");
+        stock1.setQte(100);
+        stock1.setQteMin(10);
 
-        produit2 = new Produit();
-        produit2.setIdProduit(2L);
-        produit2.setLibelleProduit("Produit B");
+        // Deuxième stock
+        stock2 = new Stock();
+        stock2.setIdStock(2L);
+        stock2.setLibelleStock("Stock 2");
+        stock2.setQte(5);
+        stock2.setQteMin(20);
+
+        stockList = Arrays.asList(stock1, stock2);
     }
 
     @Test
-    void testRetrieveAllProduits() {
-        when(produitRepository.findAll()).thenReturn(Arrays.asList(produit1, produit2));
+    void testRetrieveAllStocks() {
+        // Given
+        when(stockRepository.findAll()).thenReturn(stockList);
 
-        List<Produit> produits = produitService.retrieveAllProduits();
+        // When
+        List<Stock> retrievedStocks = stockService.retrieveAllStocks();
 
-        assertNotNull(produits);
-        assertEquals(2, produits.size());
-        verify(produitRepository, times(1)).findAll();
+        // Then
+        assertNotNull(retrievedStocks);
+        assertEquals(2, retrievedStocks.size());
+        verify(stockRepository).findAll();
     }
 
     @Test
-    void testRetrieveProduit() {
-        when(produitRepository.findById(1L)).thenReturn(Optional.of(produit1));
+    void testAddStock() {
+        // Given
+        Stock stockToAdd = new Stock();
+        stockToAdd.setLibelleStock("Nouveau Stock");
+        when(stockRepository.save(any(Stock.class))).thenReturn(stockToAdd);
 
-        Produit produit = produitService.retrieveProduit(1L);
+        // When
+        Stock result = stockService.addStock(stockToAdd);
 
-        assertNotNull(produit);
-        assertEquals(1L, produit.getIdProduit());
-        assertEquals("Produit A", produit.getLibelleProduit());
+        // Then
+        assertNotNull(result);
+        assertEquals("Nouveau Stock", result.getLibelleStock());
+        verify(stockRepository).save(stockToAdd);
     }
 
     @Test
-    void testAddProduit() {
-        when(produitRepository.save(any(Produit.class))).thenReturn(produit1);
+    void testDeleteStock() {
+        // Given
+        Long stockId = 1L;
+        when(stockRepository.findById(stockId)).thenReturn(Optional.of(stock1));
 
-        Produit savedProduit = produitService.addProduit(produit1);
+        // When
+        stockService.deleteStock(stockId);
 
-        assertNotNull(savedProduit);
-        assertEquals(1L, savedProduit.getIdProduit());
+        // Then
+        verify(stockRepository).deleteById(stockId);
     }
 
     @Test
-    void testUpdateProduit() {
-        when(produitRepository.save(any(Produit.class))).thenReturn(produit2);
+    void testUpdateStock() {
+        // Given
+        Stock stockToUpdate = stock1;
+        stockToUpdate.setLibelleStock("Stock Modifié");
+        when(stockRepository.save(any(Stock.class))).thenReturn(stockToUpdate);
 
-        Produit updatedProduit = produitService.updateProduit(produit2);
+        // When
+        Stock result = stockService.updateStock(stockToUpdate);
 
-        assertNotNull(updatedProduit);
-        assertEquals(2L, updatedProduit.getIdProduit());
-        assertEquals("Produit B", updatedProduit.getLibelleProduit());
+        // Then
+        assertNotNull(result);
+        assertEquals("Stock Modifié", result.getLibelleStock());
+        verify(stockRepository).save(stockToUpdate);
     }
 
     @Test
-    void testDeleteProduit() {
-        doNothing().when(produitRepository).deleteById(1L);
+    void testRetrieveStock() {
+        // Given
+        Long stockId = 1L;
+        when(stockRepository.findById(stockId)).thenReturn(Optional.of(stock1));
 
-        produitService.deleteProduit(1L);
+        // When
+        Stock result = stockService.retrieveStock(stockId);
 
-        verify(produitRepository, times(1)).deleteById(1L);
+        // Then
+        assertNotNull(result);
+        assertEquals(stockId, result.getIdStock());
+        verify(stockRepository).findById(stockId);
+    }
+
+    @Test
+    void testRetrieveStatusStock() {
+        // Given
+        when(stockRepository.findAll()).thenReturn(stockList);
+
+        // When
+        String status = stockService.retrieveStatusStock();
+
+        // Then
+        assertNotNull(status);
+        assertTrue(status.contains("Stock 2"));
+        assertTrue(status.contains("inférieure à la quantité min"));
+        verify(stockRepository).findAll();
     }
 }
-
