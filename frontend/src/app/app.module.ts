@@ -15,6 +15,7 @@ import { OperateurComponent } from './operateur/operateur.component';
 import { FactureComponent } from './facture/facture.component';
 import { NavbarComponent } from './navbar/navbar.component';
 import { LoggerModule, NgxLoggerLevel } from 'ngx-logger';
+import { LoggerService } from './shared/Service/logger.service';
 
 @NgModule({
   declarations: [
