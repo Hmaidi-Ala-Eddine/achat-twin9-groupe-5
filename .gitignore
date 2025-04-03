@@ -84,3 +84,16 @@ build/
 .docker/
 docker-compose.yml
 
+# Node.js (Frontend)
+node_modules/
+dist/
+.angular/
+npm-debug.log*
+
+# Java/Spring Boot (Backend)
+target/
+*.jar
+*.war
+.mvn/
+mvnw
+mvnw.cmd
