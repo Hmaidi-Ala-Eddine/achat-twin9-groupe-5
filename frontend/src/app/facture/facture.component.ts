@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Facture } from '../shared/Model/Facture';
 import { FactureService } from '../shared/Service/Facture.service';
+import { NGXLogger } from 'ngx-logger'; // Importer NGXLogger
 
 @Component({
   selector: 'app-facture',
@@ -15,7 +16,7 @@ export class FactureComponent implements OnInit {
   facture!: Facture;
   closeResult!: string;
 
-  constructor(private factureService: FactureService, private modalService: NgbModal) {
+  constructor(private factureService: FactureService, private modalService: NgbModal, private logger: NGXLogger) {
   }
 
   ngOnInit(): void {
@@ -31,10 +32,15 @@ export class FactureComponent implements OnInit {
   }
 
   getAllFactures() {
+
+    this.logger.info('Fetching all factures...');  // Log message
+
+
     this.factureService.getAllFactures().subscribe(res => this.listFactures = res)
   }
 
   addFacture(f: any) {
+    this.logger.info('Adding facture:', f);  // Log message before adding
     this.factureService.addFacture(f).subscribe(() => {
       this.getAllFactures();
       this.form = false;
@@ -50,6 +56,7 @@ export class FactureComponent implements OnInit {
   }
 
   private getDismissReason(reason: any): string {
+    this.logger.info('Modal dismissed with reason:', reason);  // Log message
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
