@@ -8,7 +8,7 @@ WORKDIR /app
 COPY target/achat-1.0.jar /app/achat-1.0.jar
 
 # Expose the port configured in application.properties (8089)
-EXPOSE 8089
+EXPOSE 8083
 
 # Run the Spring Boot application
 ENTRYPOINT ["java", "-jar", "/app/achat-1.0.jar"]
