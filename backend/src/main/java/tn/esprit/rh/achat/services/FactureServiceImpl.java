@@ -34,7 +34,7 @@ public class FactureServiceImpl implements IFactureService {
 		List<Facture> factures = (List<Facture>) factureRepository.findAll();
 		for (Facture facture : factures) {
 			log.info(" facture : " + facture);
-			log.info("Total products retrieved: {}", facture.size());
+
 			log.info("TEST LOGBACK - Ceci est un test de log !");
 		}
 		return factures;
@@ -44,7 +44,8 @@ public class FactureServiceImpl implements IFactureService {
 	public Facture addFacture(Facture f) {
 		log.info("Adding new facture: {}", f);
 		return factureRepository.save(f);
-		log.info("facture saved successfully with ID: {}", savedProduit.getIdFacture());
+	
+
 	}
 
 	/*
@@ -93,7 +94,7 @@ public class FactureServiceImpl implements IFactureService {
 
 		Facture facture = factureRepository.findById(factureId).orElse(null);
 		log.info("facture :" + facture);
-		log.info("Total products retrieved: {}", facture.size());
+
 		log.info("TEST LOGBACK - Ceci est un test de log !");
 		return facture;
 	}

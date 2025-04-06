@@ -56,11 +56,11 @@ export class FactureComponent implements OnInit {
   }
 
   private getDismissReason(reason: any): string {
-    this.logger.info('Modal dismissed with reason:', reason);  // Log message
+    this.logger.info('Modal dismissed with reason:', reason); // Log message
     if (reason === ModalDismissReasons.ESC) {
       return 'by pressing ESC';
     } else if (reason === ModalDismissReasons.BACKDROP_CLICK) {
-      return 'by clicking on a backdrop';
+      return 'by clicking on a backdrop'; // Assurez-vous que ce message correspond exactement
     } else {
       return `with: ${reason}`;
     }

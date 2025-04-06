@@ -33,7 +33,7 @@ public class ProduitServiceImpl implements IProduitService {
 			log.info("Product retrieved: {}", produit);
 		}
 		log.info("Total products retrieved: {}", produits.size());
-		log.info("TEST LOGBACK - Ceci est un test de log !");
+		log.info("TEST LOGBACK - Ceci est un test de log!");
 
 		return produits;
 	}
