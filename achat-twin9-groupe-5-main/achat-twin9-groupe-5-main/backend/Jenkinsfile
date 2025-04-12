@@ -19,21 +19,27 @@ pipeline {
 
         stage('Build Maven') {
             steps {
-                sh 'mvn clean install'
+                dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main') {
+                    sh 'mvn clean install'
+                }
             }
         }
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv("${SONARQUBE}") {
-                    sh 'mvn sonar:sonar'
+                dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main') {
+                    withSonarQubeEnv("${SONARQUBE}") {
+                        sh 'mvn sonar:sonar'
+                    }
                 }
             }
         }
 
         stage('Docker Build') {
             steps {
-                sh 'docker build -t $DOCKER_IMAGE .'
+                dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main') {
+                    sh 'docker build -t $DOCKER_IMAGE .'
+                }
             }
         }
     }
