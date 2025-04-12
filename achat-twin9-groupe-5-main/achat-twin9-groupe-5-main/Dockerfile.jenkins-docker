@@ -5,11 +5,10 @@ USER root
 # Installer Docker dans le conteneur
 RUN apt-get update && apt-get install -y docker.io
 
-# Trouver le GID du socket Docker sur ta machine hôte (ex: 998)
-# et le forcer ici dans le conteneur
-RUN groupadd -g 998 docker || true
+# Ajouter le groupe docker avec le bon GID de ta machine (GID = 109)
+RUN groupadd -g 109 docker || true
 
-# Ajouter l’utilisateur jenkins au groupe docker
+# Ajouter l'utilisateur jenkins au groupe docker
 RUN usermod -aG docker jenkins
 
 USER jenkins
