@@ -1,0 +1,56 @@
+pipeline {
+    agent any
+
+    environment {
+        SONARQUBE = 'SonarQube-Local' // Le nom que tu as donné à Sonar dans Jenkins
+        DOCKER_IMAGE = "skanderlaribi/achat-backend"
+    }
+
+    tools {
+        maven 'Maven-3.8.5' // ou le nom configuré dans Jenkins > Tools
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'main', url: 'https://github.com/ton-utilisateur/ton-repo.git'
+            }
+        }
+
+        stage('Build Maven') {
+            steps {
+                sh 'mvn clean install'
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            steps {
+                withSonarQubeEnv("${SONARQUBE}") {
+                    sh 'mvn sonar:sonar'
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t $DOCKER_IMAGE .'
+            }
+        }
+
+        // (Optionnel) si tu veux push l’image vers DockerHub
+        // stage('Docker Push') {
+        //     steps {
+        //         withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+        //             sh 'echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin'
+        //             sh 'docker push $DOCKER_IMAGE'
+        //         }
+        //     }
+        // }
+    }
+
+    post {
+        always {
+            echo 'Pipeline terminée.'
+        }
+    }
+}
