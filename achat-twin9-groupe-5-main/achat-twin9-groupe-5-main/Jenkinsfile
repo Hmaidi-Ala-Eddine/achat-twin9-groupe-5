@@ -27,9 +27,11 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main/backend') {
-                    withSonarQubeEnv("${SONARQUBE}") {
-                        sh 'mvn sonar:sonar'
+                withSonarQubeEnv("${SONARQUBE}") {
+                    withCredentials([string(credentialsId: 'sonar-token3', variable: 'SONAR_TOKEN')]) {
+                        dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main/backend') {
+                            sh 'mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN'
+                        }
                     }
                 }
             }
