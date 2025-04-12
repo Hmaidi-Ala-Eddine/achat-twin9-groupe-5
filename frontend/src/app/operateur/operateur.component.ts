@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal, ModalDismissReasons } from '@ng-bootstrap/ng-bootstrap';
 import { Operateur } from '../shared/Model/Operateur';
 import { OperateurService } from '../shared/Service/Operateur.service';
+import { NGXLogger } from 'ngx-logger';
 
 @Component({
   selector: 'app-operateur',
@@ -15,48 +16,86 @@ export class OperateurComponent implements OnInit {
   operateur!: Operateur;
   closeResult!: string;
 
-  constructor(private operateurService: OperateurService, private modalService: NgbModal) {
-  }
+  constructor(
+    private operateurService: OperateurService,
+    private modalService: NgbModal,
+    private logger: NGXLogger
+  ) {}
 
   ngOnInit(): void {
+    this.logger.info('OperateurComponent initialized');
     this.getAllOperateurs();
+
     this.operateur = {
-      idOperateur:null,
-      nom:null,
-      prenom:null,
-      password:null
-    }
+      idOperateur: null,
+      nom: null,
+      prenom: null,
+      password: null
+    };
   }
 
   getAllOperateurs() {
-    this.operateurService.getAllOperateurs().subscribe(res => this.listOperateurs = res)
+    this.logger.debug('Fetching all operators...');
+    this.operateurService.getAllOperateurs().subscribe(
+      res => {
+        this.listOperateurs = res;
+        this.logger.info('Operators fetched successfully', res);
+      },
+      error => this.logger.error('Error fetching operators', error)
+    );
   }
 
   addOperateur(o: any) {
-    this.operateurService.addOperateur(o).subscribe(() => {
-      this.getAllOperateurs();
-      this.form = false;
-    });
+    this.logger.debug('Adding new operator...', o);
+    this.operateurService.addOperateur(o).subscribe(
+      () => {
+        this.logger.info('Operator added successfully');
+        this.getAllOperateurs();
+        this.form = false;
+      },
+      error => this.logger.error('Error adding operator', error)
+    );
   }
 
   editOperateur(operateur: Operateur) {
-    this.operateurService.editOperateur(operateur).subscribe();
+    this.logger.debug(`Editing operator with ID: ${operateur.idOperateur}`, operateur);
+    this.operateurService.editOperateur(operateur).subscribe(
+      () => this.logger.info(`Operator ${operateur.idOperateur} edited successfully`),
+      error => this.logger.error(`Error editing operator ${operateur.idOperateur}`, error)
+    );
   }
 
   deleteOperateur(idOperateur: any) {
-    this.operateurService.deleteOperateur(idOperateur).subscribe(() => this.getAllOperateurs())
+    this.logger.warn(`Deleting operator with ID: ${idOperateur}`);
+    this.operateurService.deleteOperateur(idOperateur).subscribe(
+      () => {
+        this.logger.info(`Operator ${idOperateur} deleted successfully`);
+        this.getAllOperateurs();
+      },
+      error => this.logger.error(`Error deleting operator ${idOperateur}`, error)
+    );
   }
 
   open(content: any, action: any) {
-    if (action != null)
-      this.operateur = action
-    else
+    if (action != null) {
+      this.operateur = action;
+      this.logger.debug(`Opening modal for editing operator ID: ${action.idOperateur}`);
+    } else {
       this.operateur = new Operateur();
-    this.modalService.open(content, {ariaLabelledBy: 'modal-basic-title'}).result.then((result) => {
-      this.closeResult = `Closed with: ${result}`;
-    }, (reason) => {
-      this.closeResult = `Dismissed ${this.getDismissReason(reason)}`;
-    });
+      this.logger.debug('Opening modal for adding a new operator');
+    }
+
+    this.modalService.open(content, { ariaLabelledBy: 'modal-basic-title' }).result.then(
+      (result) => {
+        this.closeResult = `Closed with: ${result}`;
+        this.logger.info(`Modal closed: ${result}`);
+      },
+      (reason) => {
+        const reasonText = this.getDismissReason(reason);
+        this.closeResult = `Dismissed ${reasonText}`;
+        this.logger.warn(`Modal dismissed: ${reasonText}`);
+      }
+    );
   }
 
   private getDismissReason(reason: any): string {
@@ -71,5 +110,6 @@ export class OperateurComponent implements OnInit {
 
   cancel() {
     this.form = false;
+    this.logger.info('Form cancelled');
   }
 }
