@@ -1,0 +1,15 @@
+FROM jenkins/jenkins:lts
+
+USER root
+
+# Installer Docker dans le conteneur
+RUN apt-get update && apt-get install -y docker.io
+
+# Créer le groupe docker avec le même GID que sur l'hôte (souvent 998 ou 999)
+# À vérifier avec `ls -n /var/run/docker.sock` sur ton host si besoin
+RUN groupadd -g 998 docker || true
+
+# Ajouter l’utilisateur jenkins au groupe docker
+RUN usermod -aG docker jenkins
+
+USER jenkins
