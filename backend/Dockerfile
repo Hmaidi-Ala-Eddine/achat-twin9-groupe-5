@@ -5,11 +5,11 @@ FROM openjdk:11-jre-slim
 WORKDIR /app
 
 # Copy the JAR file from the target folder to the container
-COPY target/achat-1.0.jar /app/achat-1.0.jar
+COPY target/achat-backend-4twin9-groupe-5-1.0.jar /app/achat-backend-4twin9-groupe-5-1.0.jar
 
 # Expose the port configured in application.properties (8089)
 EXPOSE 8089
 
 # Run the Spring Boot application
-ENTRYPOINT ["java", "-jar", "/app/achat-1.0.jar"]
+ENTRYPOINT ["java", "-jar", "/app/achat-backend-4twin9-groupe-5-1.0.jar"]
 
