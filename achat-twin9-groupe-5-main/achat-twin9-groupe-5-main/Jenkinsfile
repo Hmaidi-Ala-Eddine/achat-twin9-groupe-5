@@ -1,17 +1,23 @@
 pipeline {
     agent any
 
+    environment {
+        SONARQUBE = 'SonarQube-Local'
+        DOCKER_IMAGE = "skan77der/achat-backend:latest"
+    }
+
     tools {
-        maven 'Maven3'
+        maven 'Maven-3.8.5'
         jdk 'jdk17'
     }
 
-    environment {
-        SONAR_TOKEN = credentials('sonar-token3')
-        DOCKER_HUB_USERNAME = 'skan77der' // 🔁 remplace par ton username Docker Hub
-    }
-
     stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'SkanderLARIBI-4TWIN9-groupe-5-2', url: 'https://github.com/Hmaidi-Ala-Eddine/achat-twin9-groupe-5.git'
+            }
+        }
+
         stage('Build Maven') {
             steps {
                 dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main/backend') {
@@ -22,7 +28,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             steps {
-                withSonarQubeEnv('SonarQube-Local') {
+                withSonarQubeEnv("${SONARQUBE}") {
                     withCredentials([string(credentialsId: 'sonar-token3', variable: 'SONAR_TOKEN')]) {
                         dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main/backend') {
                             sh 'mvn sonar:sonar -Dsonar.token=$SONAR_TOKEN'
@@ -32,12 +38,20 @@ pipeline {
             }
         }
 
-        stage('Docker Build & Push') {
+        stage('Docker Build') {
             steps {
                 dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main/backend') {
+                    sh 'docker build -t $DOCKER_IMAGE .'
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     sh '''
-                        docker build -t $DOCKER_HUB_USERNAME/achat-backend:latest .
-                        docker push $DOCKER_HUB_USERNAME/achat-backend:latest
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $DOCKER_IMAGE
                     '''
                 }
             }
