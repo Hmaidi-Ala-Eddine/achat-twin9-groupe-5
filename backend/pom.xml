@@ -12,11 +12,11 @@
 	</parent>
 
 	<groupId>tn.esprit.rh</groupId>
-	<artifactId>achat</artifactId>
+	<artifactId>achat-backend-hmaidialaeddine-4twin9-groupe-5</artifactId>
 	<version>1.0</version> <!-- Version fixe pour release -->
 	<packaging>jar</packaging>
 
-	<name>achat</name>
+	<name>achat-backend-hmaidialaeddine-4twin9-groupe-5</name>
 	<description>Projet pour le module DevOps</description>
 
 	<properties>
