@@ -56,6 +56,16 @@ pipeline {
                 }
             }
         }
+
+        stage('Docker Run (Deploy)') {
+            steps {
+                sh '''
+                    docker stop achat-container || true
+                    docker rm achat-container || true
+                    docker run -d --name achat-container -p 9090:8089 skan77der/achat-backend:latest
+                '''
+            }
+        }
     }
 
     post {
