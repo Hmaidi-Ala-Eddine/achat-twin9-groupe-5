@@ -2,5 +2,5 @@ projectKey=achat-backend-BenattayaMehdi-4twin9-groupe-5
 serverUrl=http://localhost:9000
 serverVersion=25.3.0.104237
 dashboardUrl=http://localhost:9000/dashboard?id=achat-backend-BenattayaMehdi-4twin9-groupe-5
-ceTaskId=4f483e55-2806-440c-869b-85d9caba174e
-ceTaskUrl=http://localhost:9000/api/ce/task?id=4f483e55-2806-440c-869b-85d9caba174e
+ceTaskId=0a6aa5bb-806f-4589-ab1d-3a2bd8e73eaa
+ceTaskUrl=http://localhost:9000/api/ce/task?id=0a6aa5bb-806f-4589-ab1d-3a2bd8e73eaa

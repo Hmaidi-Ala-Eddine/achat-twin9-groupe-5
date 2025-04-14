@@ -1,0 +1,37 @@
+# global:
+#   scrape_interval: 15s
+
+# scrape_configs:
+#   - job_name: 'springboot'
+#     metrics_path: '/SpringMVC/actuator/prometheus'
+#     static_configs:
+#       - targets: ['backend-achat:8089']  # Utilise le nom de ton service Docker backend et le port exposé
+
+
+
+global:
+  scrape_interval: 15s
+
+scrape_configs:
+  - job_name: 'prometheus'
+    static_configs:
+      - targets: ['localhost:9090']
+
+  - job_name: 'backend'
+    static_configs:
+      - targets: ['backend:8089']
+    metrics_path: '/SpringMVC/actuator/prometheus'
+
+  - job_name: 'frontend'
+    static_configs:
+      - targets: ['frontend-exporter:9100']
+
+
+
+    # relabel_configs:
+    #   - source_labels: [__address__]
+    #     target_label: __param_target
+    #   - source_labels: [__param_target]
+    #     target_label: instance
+    #   - target_label: _address_
+    #     replacement: prometheus:9090
