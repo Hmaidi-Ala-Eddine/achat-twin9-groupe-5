@@ -1,0 +1,70 @@
+pipeline {
+    agent any
+
+    environment {
+        DOCKER_IMAGE = "skan77der/achat-frontend:latest"
+    }
+
+    tools {
+        nodejs 'Node-18'   // Assure-toi que ce nom correspond à ce que tu as configuré dans Jenkins
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                git branch: 'SkanderLARIBI-4TWIN9-groupe-5-2', url: 'https://github.com/Hmaidi-Ala-Eddine/achat-twin9-groupe-5.git'
+            }
+        }
+
+        stage('Install Dependencies') {
+            steps {
+                dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main/frontend') {
+                    sh 'npm install --legacy-peer-deps'
+                }
+            }
+        }
+
+        stage('Build Angular') {
+            steps {
+                dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main/frontend') {
+                    sh 'npm run build'
+                }
+            }
+        }
+
+        stage('Docker Build') {
+            steps {
+                dir('achat-twin9-groupe-5-main/achat-twin9-groupe-5-main/frontend') {
+                    sh 'docker build -t $DOCKER_IMAGE .'
+                }
+            }
+        }
+
+        stage('Docker Push') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'dockerhub-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                        echo "$DOCKER_PASS" | docker login -u "$DOCKER_USER" --password-stdin
+                        docker push $DOCKER_IMAGE
+                    '''
+                }
+            }
+        }
+
+        stage('Docker Run (Deploy)') {
+            steps {
+                sh '''
+                    docker stop achat-frontend || true
+                    docker rm achat-frontend || true
+                    docker run -d --name achat-frontend -p 4200:80 skan77der/achat-frontend:latest
+                '''
+            }
+        }
+    }
+
+    post {
+        always {
+            echo '✅ Pipeline frontend terminée.'
+        }
+    }
+}

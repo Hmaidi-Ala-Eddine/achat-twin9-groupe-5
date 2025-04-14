@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "scripts": {
     "ng": "ng",
-    "start": "export NODE_OPTIONS=--openssl-legacy-provider && ng serve",
+    "start": "node --openssl-legacy-provider ./node_modules/@angular/cli/bin/ng serve",
     "build": "export NODE_OPTIONS=--openssl-legacy-provider && ng build",
     "watch": "export NODE_OPTIONS=--openssl-legacy-provider && ng build --watch --configuration development",
     "test": "export NODE_OPTIONS=--openssl-legacy-provider && ng test",
